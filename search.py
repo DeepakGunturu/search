@@ -165,10 +165,40 @@ def breadthFirstSearch(problem):
     
     return []
 
+# This algorithm is the same algorithm as the DFS except that we use a priority queue taking into priority the cheapest nodes instead to search the nodes at each level instead of searching each node deeply
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    fringeFunction = util.PriorityQueue()
+    fringeFunction.push((problem.getStartState(),[],0),0)
+    isVisited = []    
+    
+    while True:
+
+        if fringeFunction.isEmpty():
+            break
+        
+        tmp = fringeFunction.pop()
+        currState = tmp[0]
+        currDirs = tmp[1]
+        currCost = tmp[2]
+
+
+        if not currState in isVisited:
+            isVisited.append(currState)
+            
+            if problem.isGoalState(currState):
+                return currDirs
+            
+            for path in problem.getSuccessors(currState):
+                nextStates = path[0]
+                nextDirs = path[1]
+                nextCost = path[2]
+                tup = (nextStates,currDirs+[nextDirs],nextCost+currCost)
+                fringeFunction.push((tup),nextCost+currCost)
+    
+    return []
 
 def nullHeuristic(state, problem=None):
     """
