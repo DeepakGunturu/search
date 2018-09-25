@@ -87,7 +87,47 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # Standard DFS algorithm using the stack data structure
+    fringeFunction = util.Stack()
+
+    # Adding the start state of the problem to the stack along with the direction array and the cost
+    fringeFunction.push(problem.getStartState())
+    fringeFunction.push([])
+    fringeFunction.push(0)
+  
+    # Keeping a track of states that have already been visited
+    isVisited = []
+
+    while True:
+
+        # If there are no states in the fringe function, we break out of the loop
+        if fringeFunction.isEmpty():
+            break
+
+        # The current cost, direction array, and the present state are popped from the fringe
+        currCost = fringeFunction.pop()
+        currDirs = fringeFunction.pop()
+        currState = fringeFunction.pop()
+
+        # Bookkeeping the states
+        if not currState in isVisited:
+            isVisited.append(currState)
+
+            # If the state is the goal of Pacman, returning the current directions
+            if problem.isGoalState(currState):
+                return currDirs
+
+            # Storing the states, directions, and costs of the successors and searching each node deeply for the goal states
+            for path in problem.getSuccessors(currState):
+                nextStates = path[0]
+                nextDirs = path[1]
+                nextCost = path[2]
+                fringeFunction.push(nextStates)
+                fringeFunction.push(currDirs+[nextDirs])
+                fringeFunction.push(nextCost+currCost)
+    
+    # If there is nothing in the fringe function
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
