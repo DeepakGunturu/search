@@ -485,6 +485,7 @@ class AStarFoodSearchAgent(SearchAgent):
         self.searchFunction = lambda prob: search.aStarSearch(prob, foodHeuristic)
         self.searchType = FoodSearchProblem
 
+# This function provides the heuristic for the Pacman agent to search for the nearest food pellets
 def foodHeuristic(state, problem):
     """
     Your heuristic for the FoodSearchProblem goes here.
@@ -514,8 +515,37 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+
+    # Present position of the Pacman
+    c1, c2 = position
+    
+    # Converting the food grid from the puzzle into a list
+    foodCoordinates = foodGrid.asList()
+    i = 0
+    minMax = [0,0,0,0]
+
+    # Searching for the nearest food pellets through the list of the food coordinates
+    while i < len(foodCoordinates):
+        
+        foodX, foodY = foodCoordinates[i]
+        
+        if foodX - c1 > minMax[0]:
+            minMax[0] = foodX - c1
+        
+        if foodX - c1 < minMax[1]:
+            minMax[1] = foodX - c1
+        
+        if foodY - c2 > minMax[2]:
+            minMax[2] = foodY - c2
+        
+        if foodY - c2 < minMax[3]:
+            minMax[3] = foodY - c2  
+        
+        i += 1
+
+    # X coordinate and Y coordinates of nearest food results
+    xRes, yRes = (minMax[0]-minMax[1]),(minMax[2]-minMax[3])
+    return xRes + yRes
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
