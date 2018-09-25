@@ -207,10 +207,39 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+# This algorithm is the same algorithm as the Uniform Cost Seach except that we use add the heuristic function to the cost for the priority as well. The state, cost, and directions are stored in a tuple
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    fringeFunction = util.PriorityQueue()
+    fringeFunction.push((problem.getStartState(),[],0),0)
+    isVisited = []    
+    
+    while True:
+
+        if fringeFunction.isEmpty():
+            break
+        
+        tmp = fringeFunction.pop()
+        currState = tmp[0]
+        currDirs = tmp[1]
+        currCost = tmp[2]
+
+        if not currState in isVisited:
+            isVisited.append(currState)
+            
+            if problem.isGoalState(currState):
+                return currDirs
+            
+            for path in problem.getSuccessors(currState):
+                nextStates = path[0]
+                nextDirs = path[1]
+                nextCost = path[2]
+                tup = (nextStates,currDirs+[nextDirs],nextCost+currCost)
+                fringeFunction.push((tup),nextCost+currCost+heuristic(nextStates,problem))
+    
+    return []
 
 
 # Abbreviations
