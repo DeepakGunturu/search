@@ -367,6 +367,7 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
+# A function that returns the shortest path from the state to the goal
 def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
@@ -384,7 +385,43 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+
+    # Storing the coordinates of the corners and the x and y from each of the corners 
+    cornerCoordinates = []
+    XcornerPositions = []
+    YcornerPositions = []
+
+    # Storing the distance between the coordinates of corners and the location
+    differences = []
+
+    # Storing the corner coordinates as tuples in the coordinates list
+    for i in corners:
+        cornerCoordinates.append(i)
+
+    # Unpacking the tuples into the x and y coordinate lists
+    for i in cornerCoordinates:
+        xCoord,yCoord = i
+        XcornerPositions.append(xCoord)
+        YcornerPositions.append(yCoord)
+    
+    x,y = state[0]
+
+    # If the state is visited, the difference is 0 between the coordinates. Else, the distances are appended
+    for i in range(0,4):
+        if state[i+1]:
+            differences.append(0)
+        else:
+            res = abs(XcornerPositions[i]-x)+abs(YcornerPositions[i]-y)
+            differences.append(res)
+
+    # Finding the maximum of the differences
+    findMax = differences[0]
+
+    for i in range(0,4):
+        if differences[i] > findMax:
+            findMax = differences[i]
+    
+    return findMax
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
