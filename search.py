@@ -129,10 +129,41 @@ def depthFirstSearch(problem):
     # If there is nothing in the fringe function
     return []
 
+# This algorithm is the same algorithm as the DFS except that we use a queue instead to search the nodes at each level instead of searching each node deeply
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    fringeFunction = util.Queue()
+    fringeFunction.push(problem.getStartState())
+    fringeFunction.push([])
+    fringeFunction.push(0)
+    isVisited = []
+
+    while True:
+
+        if fringeFunction.isEmpty():
+            break
+
+        currState = fringeFunction.pop()
+        currDirs = fringeFunction.pop()
+        currCost = fringeFunction.pop()
+
+        if not currState in isVisited:
+            isVisited.append(currState)
+
+            if problem.isGoalState(currState):
+                return currDirs
+
+            for path in problem.getSuccessors(currState):
+                nextStates = path[0]
+                nextDirs = path[1]
+                nextCost = path[2]
+                fringeFunction.push(nextStates)
+                fringeFunction.push(currDirs+[nextDirs])
+                fringeFunction.push(nextCost+currCost)
+    
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
